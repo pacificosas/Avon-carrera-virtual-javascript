@@ -7,7 +7,7 @@ const getRep = async (code, country) => {
 
     const { payload } = await req.json()
     if (payload) {
-      sessionStorage.setItem(getStorageKey('rep'), payload)
+      sessionStorage.setItem(getStorageKey('rep'), JSON.stringify(payload))
     }
     return payload
   } catch (e) {
@@ -35,7 +35,24 @@ const getRepOnForm = (
   })
 }
 
+const formAutoComplete = (
+  form,
+  fields = {}
+) => {
+  const rep = JSON.parse(sessionStorage.getItem(getStorageKey('rep')))
+  if (!rep) { return null }
+  for (const key in fields) {
+    const input = form.querySelector(`[name=${key}]`)
+    const filedTargetValue = fields[key]
+    const fieldValue = rep[filedTargetValue]
+    if (input && filedTargetValue && fieldValue) {
+      input.value = fieldValue
+    }
+  }
+}
+
 export default {
   getRep,
-  getRepOnForm
+  getRepOnForm,
+  formAutoComplete
 }
