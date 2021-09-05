@@ -51,8 +51,12 @@ const formAutoComplete = (
   }
 }
 
+const getLocalRep = () => {
+  return JSON.parse(sessionStorage.getItem(getStorageKey('rep')))
+}
 export default {
   getRep,
   getRepOnForm,
-  formAutoComplete
+  formAutoComplete,
+  getLocalRep
 }
