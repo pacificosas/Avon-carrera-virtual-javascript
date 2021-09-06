@@ -2,8 +2,8 @@ const createQuantity = (label, classes) => {
   const html = `
 <div class="quantity">
   <label class="${classes}">${label}</label>
-	<input type="button" value="-" class="minus">
- 	<input type="number" class="input-text qty text" step="1" min="0" max="" value="0" >
+  <input type="button" value="-" class="minus">
+  <input type="number" class="input-text qty text" step="1" min="0" max="" value="0" >
   <input type="button" value="+" class="plus">
 </div>
   `
@@ -58,13 +58,10 @@ const parseSections = sections => {
 }
 
 const writeOnInput = (input, sections, currentQuantity, max) => {
-  console.log('write', currentQuantity, max, currentQuantity === max)
   if (currentQuantity === max) {
-    console.log('max')
     input.value = JSON.stringify(parseSections(sections))
     return true
   } else {
-    console.log('jmmmmm')
     input.value = null
     return false
   }
