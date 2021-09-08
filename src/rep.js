@@ -5,8 +5,9 @@ const getRep = async (code, country) => {
   try {
     const req = await fetch(`${api}/representatives/${country}?code=${code}`)
 
-    const { payload } = await req.json()
+    let { payload } = await req.json()
     if (payload) {
+      payload = { ...payload, hasOrder: await hasOrder(payload.id) }
       sessionStorage.setItem(getStorageKey('rep'), JSON.stringify(payload))
     }
     return payload
@@ -14,7 +15,34 @@ const getRep = async (code, country) => {
     console.warn(e)
   }
 }
+const hasOrder = async (id) => {
+  try {
+    const req = await fetch(`${api}/reporders/${id}`)
+    const { payload } = await req.json()
+    return payload
+  } catch (e) {
+    console.warn(e)
+  }
+}
 
+const addOrder = async (id) => {
+  try {
+    const req = await fetch(`${api}/reporders/${id}`, {
+      method: 'POST'
+    })
+    const { payload } = await req.json()
+    return payload
+  } catch (e) {
+    console.warn(e)
+  }
+}
+
+const setOrder = () => {
+  const user = sessionStorage.setItem(getStorageKey('rep'))
+  if (user) {
+    addOrder(user.id)
+  }
+}
 const getRepOnForm = (
   {
     loading, err,
@@ -58,5 +86,6 @@ export default {
   getRep,
   getRepOnForm,
   formAutoComplete,
-  getLocalRep
+  getLocalRep,
+  setOrder
 }
