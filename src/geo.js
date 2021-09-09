@@ -1,4 +1,5 @@
 import api from './config/api'
+import { dsc, sortMatrix } from './sort'
 
 const onSelectClick = callback => ({ target }) => {
   const selected = Array.from(target.querySelectorAll('option')).find(opt => opt.value === target.value)
@@ -14,10 +15,12 @@ const addDefaultOption = (name) => {
 
 const addGeoOptionsByScale = async (select, scale, { fromId, country, defaultLabel } = {}) => {
   try {
+    const sortByName = sortMatrix(x => x.name)(dsc)
     const query = fromId ? `fromId=${fromId}&country=${country}` : `country=${country}`
     const req = await fetch(`${api}geography/${scale}?${query}`)
     const res = await req.json()
-    const options = res.payload
+
+    const options = sortByName(res.payload)
 
     const htmlOptions = options.map(opt => {
       const el = document.createElement('option')
