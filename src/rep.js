@@ -38,7 +38,7 @@ const addOrder = async (id) => {
 }
 
 const setOrder = () => {
-  const user = sessionStorage.setItem(getStorageKey('rep'))
+  const user = sessionStorage.getItem(getStorageKey('rep'))
   if (user) {
     addOrder(user.id)
   }
