@@ -37,10 +37,10 @@ const addOrder = async (id) => {
   }
 }
 
-const setOrder = () => {
+const setOrder = async () => {
   const user = JSON.parse(sessionStorage.getItem(getStorageKey('rep')))
   if (user) {
-    addOrder(user.id)
+    await addOrder(user.id)
   }
 }
 const getRepOnForm = (
