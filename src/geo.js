@@ -84,7 +84,25 @@ const main = ({ country, levels } = {}) => {
     l.select.append(addDefaultOption(l.defaultLabel))
   }
 
-  fillDeptos(levels[0])
+  if (country !== 'pe') {
+    fillDeptos(levels[0])
+  }
+  // manual fill departments on peru
+  if (country === 'pe') {
+    const data = [
+      document.createElement('option'),
+      document.createElement('option')
+    ]
+    data[0].innerHTML = 'LIMA'
+    data[0].setAttribute('values', 'LIMA')
+    data[0].setAttribute('data-id', '44')
+
+    data[1].innerHTML = 'CALLAO'
+    data[1].setAttribute('values', 'CALLAO')
+    data[1].setAttribute('data-id', '46')
+
+    data.forEach(opt => levels[0].element.append(opt))
+  }
 
   if (levels[1]) {
     levels[0].element.addEventListener('change', onSelectClick(fillCities(levels[1], levels.slice(1))))
