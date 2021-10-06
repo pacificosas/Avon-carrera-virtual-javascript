@@ -101,6 +101,7 @@ const main = ({ country, levels } = {}) => {
     data[1].setAttribute('values', 'CALLAO')
     data[1].setAttribute('data-id', '46')
 
+    levels[0].element.append(addDefaultOption(levels[0].defaultLabel))
     data.forEach(opt => levels[0].element.append(opt))
   }
 
