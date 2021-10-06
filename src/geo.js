@@ -53,10 +53,15 @@ const main = ({ country, levels } = {}) => {
     throw new Error('pacifica_geo: should specified max 3 scale levels')
   }
 
-  const fillDeptos = (level) => addGeoOptionsByScale(level.element, 'departments', {
-    country,
-    defaultLabel: level.defaultLabel
-  })
+  const fillDeptos = async (level) => {
+    const deptos = await addGeoOptionsByScale(level.element, 'departments', {
+      country,
+      defaultLabel: level.defaultLabel
+    })
+    if (country === 'pe') {
+      deptos.filter(d => d.name === 'LIMA' || d.name === 'CALLAO')
+    }
+  }
 
   const fillCities = (level, tree) => (fromId) => {
     if (!fromId) {
