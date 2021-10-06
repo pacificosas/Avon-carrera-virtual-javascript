@@ -20,7 +20,11 @@ const addGeoOptionsByScale = async (select, scale, { fromId, country, defaultLab
     const req = await fetch(`${api}geography/${scale}?${query}`)
     const res = await req.json()
 
-    const options = sortByName(res.payload)
+    let options = sortByName(res.payload)
+
+    if (country === 'pe' && (scale === 'cities' || scale === 'departments')) {
+      options = options.filter(opt => opt.name === 'LIMA' || opt.name === 'CALLAO')
+    }
 
     const htmlOptions = options.map(opt => {
       const el = document.createElement('option')
@@ -53,15 +57,10 @@ const main = ({ country, levels } = {}) => {
     throw new Error('pacifica_geo: should specified max 3 scale levels')
   }
 
-  const fillDeptos = async (level) => {
-    const deptos = await addGeoOptionsByScale(level.element, 'departments', {
-      country,
-      defaultLabel: level.defaultLabel
-    })
-    if (country === 'pe') {
-      deptos.filter(d => d.name === 'LIMA' || d.name === 'CALLAO')
-    }
-  }
+  const fillDeptos = (level) => addGeoOptionsByScale(level.element, 'departments', {
+    country,
+    defaultLabel: level.defaultLabel
+  })
 
   const fillCities = (level, tree) => (fromId) => {
     if (!fromId) {
@@ -89,26 +88,7 @@ const main = ({ country, levels } = {}) => {
     l.select.append(addDefaultOption(l.defaultLabel))
   }
 
-  if (country !== 'pe') {
-    fillDeptos(levels[0])
-  }
-  // manual fill departments on peru
-  if (country === 'pe') {
-    const data = [
-      document.createElement('option'),
-      document.createElement('option')
-    ]
-    data[0].innerHTML = 'LIMA'
-    data[0].setAttribute('values', 'LIMA')
-    data[0].setAttribute('data-id', '44')
-
-    data[1].innerHTML = 'CALLAO'
-    data[1].setAttribute('values', 'CALLAO')
-    data[1].setAttribute('data-id', '46')
-
-    levels[0].element.append(addDefaultOption(levels[0].defaultLabel))
-    data.forEach(opt => levels[0].element.append(opt))
-  }
+  fillDeptos(levels[0])
 
   if (levels[1]) {
     levels[0].element.addEventListener('change', onSelectClick(fillCities(levels[1], levels.slice(1))))
